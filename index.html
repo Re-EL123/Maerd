@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maerd – Business Begins with a Dream</title>
+  <style>
+    :root {
+      --primary: #000;
+      --background: #fff;
+      --accent: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
+      --glass: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: var(--primary);
+      color: var(--background);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .auth-container {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      padding: 2rem;
+      border-radius: 2rem;
+      width: 90%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    .spectrum-strip {
+      height: 5px;
+      width: 100%;
+      background: var(--accent);
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    input {
+      padding: 0.8rem;
+      border: none;
+      border-radius: 1rem;
+      outline: none;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+    }
+
+    input::placeholder {
+      color: #ccc;
+    }
+
+    button {
+      padding: 0.9rem;
+      background: white;
+      color: black;
+      border: none;
+      border-radius: 1rem;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    button:hover {
+      background: #eee;
+    }
+
+    .toggle {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #ccc;
+      cursor: pointer;
+    }
+
+    .toggle span {
+      color: white;
+      font-weight: bold;
+    }
+
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      opacity: 0.1;
+      filter: blur(15px);
+    }
+
+    .bubble1 { width: 100px; height: 100px; top: -40px; right: -40px; }
+    .bubble2 { width: 70px; height: 70px; bottom: -30px; left: -20px; }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="spectrum-strip"></div>
+    <h1 id="form-title">Login to Maerd</h1>
+    <input type="text" id="realName" placeholder="Your Real Name" style="display: none;" />
+    <input type="text" id="businessName" placeholder="Business Name" style="display: none;" />
+    <input type="email" id="email" placeholder="Email Address" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="handleAuth()">Login</button>
+    <div class="toggle" onclick="toggleForm()">
+      Don't have an account? <span>Sign Up</span>
+    </div>
+    <div class="bubble bubble1"></div>
+    <div class="bubble bubble2"></div>
+  </div>
+
+  <script>
+    let isSignup = false;
+
+    function toggleForm() {
+      isSignup = !isSignup;
+      const title = document.getElementById('form-title');
+      const realName = document.getElementById('realName');
+      const businessName = document.getElementById('businessName');
+      const toggle = document.querySelector('.toggle span');
+      const button = document.querySelector('button');
+
+      if (isSignup) {
+        title.textContent = 'Create Your Maerd Account';
+        realName.style.display = 'block';
+        businessName.style.display = 'block';
+        button.textContent = 'Sign Up';
+        toggle.textContent = 'Login';
+        document.querySelector('.toggle').childNodes[0].textContent = 'Already have an account? ';
+      } else {
+        title.textContent = 'Login to Maerd';
+        realName.style.display = 'none';
+        businessName.style.display = 'none';
+        button.textContent = 'Login';
+        toggle.textContent = 'Sign Up';
+        document.querySelector('.toggle').childNodes[0].textContent = "Don't have an account? ";
+      }
+    }
+
+    function handleAuth() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const realName = document.getElementById('realName').value;
+      const businessName = document.getElementById('businessName').value;
+
+      if (isSignup) {
+        console.log("Signing up:", { email, password, realName, businessName });
+        // Add Firebase signup logic here
+      } else {
+        console.log("Logging in:", { email, password });
+        // Add Firebase login logic here
+      }
+    }
+  </script>
+</body>
+</html>
