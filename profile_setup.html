@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maerd | Profile Setup</title>
+  <style>
+    :root {
+      --primary: #000;
+      --background: #fff;
+      --accent: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
+      --glass: rgba(255, 255, 255, 0.1);
+      --step-indicator: #ccc;
+      --step-active: white;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body {
+      background: var(--primary);
+      color: var(--background);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+    .spectrum-strip { height: 4px; width: 100%; background: var(--accent); }
+    .header { text-align: center; padding: 1rem; font-size: 1.5rem; font-weight: bold; background: var(--glass); backdrop-filter: blur(10px); }
+    .container { flex: 1; overflow-y: auto; padding: 1rem; }
+    .step-indicator { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .circle {
+      width: 12px; height: 12px; border-radius: 50%; background: var(--step-indicator);
+    }
+    .circle.active { background: var(--step-active); }
+    .step { display: none; }
+    .step.active { display: block; }
+    .step input, .step textarea, .step select { width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: none; border-radius: 1rem; background: rgba(255,255,255,0.05); color: white; }
+    .step label { display: block; margin-top: 1rem; font-size: 0.9rem; }
+    .actions { display: flex; justify-content: flex-end; margin-top: 1rem; }
+    .actions button { padding: 0.75rem 1.5rem; border: none; border-radius: 1rem; background: white; color: black; font-weight: bold; cursor: pointer; }
+    .bubble { position: absolute; border-radius: 50%; background: white; opacity: 0.05; filter: blur(20px); }
+    .bubble1 { width: 120px; height: 120px; top: 60px; right: -40px; }
+    .bubble2 { width: 80px; height: 80px; bottom: 80px; left: -30px; }
+  </style>
+</head>
+<body>
+  <div class="spectrum-strip"></div>
+  <div class="header">Complete Your Business Profile</div>
+  <div class="container">
+    <div class="step-indicator" id="indicator"></div>
+    <!-- Step 1: Logo / Avatar -->
+    <div class="step" data-step="1">
+      <h2>1. Upload Logo or Choose Avatar</h2>
+      <label for="logoInput">Business Logo</label>
+      <input type="file" id="logoInput" accept="image/*" />
+      <label>Select Avatar</label>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <img src="assets/avatars/default.png" class="avatar-thumb" data-avatar="assets/avatars/default.png" />
+        <img src="assets/avatars/creative.png" class="avatar-thumb" data-avatar="assets/avatars/creative.png" />
+        <img src="assets/avatars/mobitech.png" class="avatar-thumb" data-avatar="assets/avatars/mobitech.png" />
+      </div>
+    </div>
+    <!-- Step 2: Description -->
+    <div class="step" data-step="2">
+      <h2>2. Business Description</h2>
+      <textarea id="description" rows="4" placeholder="Describe your business..."></textarea>
+    </div>
+    <!-- Step 3: Add Product -->
+    <div class="step" data-step="3">
+      <h2>3. Add at Least One Product</h2>
+      <div id="products"></div>
+      <button onclick="addProduct();">+ Add Product</button>
+    </div>
+    <!-- Step 4: Service Areas -->
+    <div class="step" data-step="4">
+      <h2>4. Service Areas</h2>
+      <label><input type="checkbox" value="Johannesburg" /> Johannesburg</label>
+      <label><input type="checkbox" value="Cape Town" /> Cape Town</label>
+      <label><input type="checkbox" value="Durban" /> Durban</label>
+      <label><input type="checkbox" value="Pretoria" /> Pretoria</label>
+      <!-- More areas -->
+    </div>
+    <!-- Step 5: Industry & Role -->
+    <div class="step" data-step="5">
+      <h2>5. Business Type & Role</h2>
+      <label>Industry</label>
+      <select id="industry" multiple>
+        <option>Retail</option>
+        <option>Food & Beverage</option>
+        <option>Technology</option>
+        <option>Consulting</option>
+        <option>Healthcare</option>
+      </select>
+      <label>Role (choose all that apply)</label>
+      <label><input type="checkbox" value="Supplier" /> Supplier</label>
+      <label><input type="checkbox" value="Distributor" /> Distributor</label>
+      <label><input type="checkbox" value="Buyer" /> Buyer</label>
+    </div>
+    <!-- Step 6: Operating Hours -->
+    <div class="step" data-step="6">
+      <h2>6. Operating Hours</h2>
+      <label>Monday – Friday</label>
+      <input type="time" id="openWeekday" /> to <input type="time" id="closeWeekday" />
+      <label>Saturday</label>
+      <input type="time" id="openSat" /> to <input type="time" id="closeSat" />
+      <label>Sunday</label>
+      <input type="time" id="openSun" /> to <input type="time" id="closeSun" />
+    </div>
+    <!-- Step 7: Services Offered -->
+    <div class="step" data-step="7">
+      <h2>7. Services Offered</h2>
+      <label><input type="checkbox" value="Consultation" /> Consultation</label>
+      <label><input type="checkbox" value="Delivery" /> Delivery</label>
+      <label><input type="checkbox" value="Installation" /> Installation</label>
+      <label><input type="checkbox" value="Custom Orders" /> Custom Orders</label>
+    </div>
+    <!-- Step 8: First Post -->
+    <div class="step" data-step="8">
+      <h2>8. Create Your First Post</h2>
+      <textarea id="firstPost" rows="4" placeholder="Welcome message or introduction..."></textarea>
+    </div>
+    <!-- Step 9: Review & Finish -->
+    <div class="step" data-step="9">
+      <h2>9. Review & Finish</h2>
+      <p>Make sure all details are correct before proceeding.</p>
+      <!-- Could display summary here -->
+    </div>
+    <div class="actions">
+      <button id="nextBtn">Next</button>
+    </div>
+  </div>
+  <div class="bubble bubble1"></div>
+  <div class="bubble bubble2"></div>
+  <script>
+    const steps = document.querySelectorAll('.step');
+    const indicator = document.getElementById('indicator');
+    let current = 1;
+    const total = steps.length;
+
+    function initIndicator() {
+      for (let i = 1; i <= total; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('circle');
+        if (i === current) dot.classList.add('active');
+        indicator.appendChild(dot);
+      }
+    }
+    function update() {
+      steps.forEach(s => s.classList.remove('active'));
+      document.querySelector(`.step[data-step="${current}"]`).classList.add('active');
+      [...indicator.children].forEach((dot,i) => {
+        dot.classList.toggle('active', i === current-1);
+      });
+      document.getElementById('nextBtn').textContent = current === total ? 'Finish' : 'Next';
+    }
+    document.getElementById('nextBtn').onclick = () => {
+      if (current < total) {
+        current++;
+        update();
+      } else {
+        // Submit all data
+        console.log('Profile complete');
+        // TODO: send to backend and redirect
+      }
+    };
+    // Dynamic product entries
+    function addProduct() {
+      const container = document.getElementById('products');
+      const idx = container.children.length + 1;
+      const div = document.createElement('div');
+      div.innerHTML = `
+        <label>Product ${idx} Name</label>
+        <input type="text" placeholder="Name" />
+        <label>Product ${idx} Description</label>
+        <textarea rows="2" placeholder="Description"></textarea>
+        <label>Product ${idx} Price (ZAR)</label>
+        <input type="number" step="0.01" placeholder="0.00" />
+      `;
+      container.appendChild(div);
+    }
+    initIndicator();
+    update();
+  </script>
+</body>
+</html>
