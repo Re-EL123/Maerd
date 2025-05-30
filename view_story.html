@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>View Story | Maerd</title>
+  <style>
+    :root {
+      --primary: #000;
+      --background: #fff;
+      --accent: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
+      --glass: rgba(255, 255, 255, 0.1);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body {
+      background: var(--primary);
+      color: var(--background);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .spectrum-strip {
+      height: 4px;
+      width: 100%;
+      background: var(--accent);
+      animation: pulse 2s linear infinite;
+    }
+    @keyframes pulse {
+      0% { filter: brightness(1); }
+      50% { filter: brightness(2); }
+      100% { filter: brightness(1); }
+    }
+    .header {
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+    }
+    .story-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      position: relative;
+    }
+    .story-image {
+      max-width: 90%;
+      max-height: 70vh;
+      border-radius: 1rem;
+      border: 3px solid #fff;
+      object-fit: cover;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    }
+    .reactions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .reaction {
+      font-size: 1.75rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .reaction:hover {
+      transform: scale(1.3);
+    }
+    .message-bar {
+      display: flex;
+      padding: 1rem;
+      gap: 0.5rem;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+    }
+    .message-bar input {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 1rem;
+      border: none;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+    }
+    .message-bar button {
+      padding: 0.75rem 1rem;
+      background: white;
+      color: black;
+      border: none;
+      border-radius: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      opacity: 0.05;
+      filter: blur(20px);
+    }
+    .bubble1 { width: 150px; height: 150px; top: 80px; right: -50px; }
+    .bubble2 { width: 100px; height: 100px; bottom: 100px; left: -40px; }
+  </style>
+</head>
+<body>
+  <div class="spectrum-strip" id="spectrumStrip"></div>
+  <div class="header">Viewing Story</div>
+  
+  <div class="story-container">
+    <img id="storyImage" class="story-image" src="assets/stories/default.jpg" alt="Story" />
+    <div class="reactions">
+      <span class="reaction" onclick="react('❤️')">❤️</span>
+      <span class="reaction" onclick="react('😂')">😂</span>
+      <span class="reaction" onclick="react('😲')">😲</span>
+      <span class="reaction" onclick="react('😢')">😢</span>
+      <span class="reaction" onclick="react('👏')">👏</span>
+    </div>
+  </div>
+
+  <div class="message-bar">
+    <input type="text" id="messageInput" placeholder="Send a message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <div class="bubble bubble1"></div>
+  <div class="bubble bubble2"></div>
+
+  <script>
+    // Parse story user from URL
+    const params = new URLSearchParams(window.location.search);
+    const user = params.get("user") || "default";
+    const storyImage = document.getElementById("storyImage");
+    storyImage.src = `assets/stories/${user}.jpg`;
+
+    function react(emoji) {
+      alert(`You reacted with ${emoji}`);
+      // TODO: Save reaction to backend (Firebase)
+    }
+
+    function sendMessage() {
+      const message = document.getElementById('messageInput').value.trim();
+      if (!message) return;
+      alert(`Message sent: ${message}`);
+      // TODO: Send message to story owner via Firebase
+      document.getElementById('messageInput').value = '';
+    }
+  </script>
+</body>
+</html>
