@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maerd | Discover</n  <!-- Discover Page -->
+</head>
+<body>
+  <style>
+    :root {
+      --primary: #000;
+      --background: #fff;
+      --accent: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
+      --glass: rgba(255, 255, 255, 0.1);
+      --card-bg: rgba(255,255,255,0.05);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: var(--primary); color: var(--background); display: flex; flex-direction: column; height: 100vh; }
+    .spectrum-strip { height: 4px; background: var(--accent); }
+    .header { text-align: center; padding: 1rem; font-size: 1.5rem; font-weight: bold; background: var(--glass); backdrop-filter: blur(10px); }
+    .container { flex: 1; overflow-y: auto; padding: 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; position: relative; }
+    .card { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 1rem; padding: 1rem; display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; transition: transform 0.2s; }
+    .card:hover { transform: scale(1.05); }
+    .card img { width: 50px; height: 50px; margin-bottom: 0.5rem; }
+    .section-full { grid-column: 1 / -1; }
+    .weather, .updates { background: var(--glass); backdrop-filter: blur(10px); border-radius: 1rem; padding: 1rem; margin: 1rem 0; }
+    .section-title { font-size: 1.25rem; margin: 1rem 0 0.5rem; }
+    .bottom-nav { display: flex; justify-content: space-around; align-items: center; padding: 0.5rem 0; background: var(--glass); backdrop-filter: blur(10px); }
+    .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: var(--background); text-decoration: none; }
+    .nav-item img { width: 24px; height: 24px; margin-bottom: 0.25rem; }
+    .bubble { position: absolute; border-radius: 50%; background: white; opacity: 0.05; filter: blur(20px); }
+    .bubble1 { width: 100px; height: 100px; top: 60px; right: -30px; }
+    .bubble2 { width: 80px; height: 80px; bottom: 100px; left: -40px; }
+  </style>
+
+  <div class="spectrum-strip"></div>
+  <div class="header">Discover & Services</div>
+  <div class="container">
+    <!-- Core Services -->
+    <div class="card" onclick="startBusiness()">
+      <img src="assets/icons/start-business.svg" alt="Start Business" />
+      <span>Start Business</span>
+    </div>
+    <div class="card" onclick="getBranding()">
+      <img src="assets/icons/branding.svg" alt="Branding" />
+      <span>Re-EL Branding</span>
+    </div>
+    <div class="card" onclick="getAppDev()">
+      <img src="assets/icons/app-dev.svg" alt="App Development" />
+      <span>App Development</span>
+    </div>
+    <div class="card" onclick="getWebsite()">
+      <img src="assets/icons/website.svg" alt="Website Development" />
+      <span>Website Development</span>
+    </div>
+    <div class="card" onclick="getDocuments()">
+      <img src="assets/icons/documents.svg" alt="Documents" />
+      <span>Legal Documents</span>
+    </div>
+
+    <!-- Re-EL Kit -->
+    <div class="section-full section-title">Re-EL Kit Apps</div>
+    <div class="card" onclick="openKit('re-v')">
+      <img src="assets/kit/re-v.svg" alt="Re-V" />
+      <span>Re-V</span>
+    </div>
+    <div class="card" onclick="openKit('re-c')">
+      <img src="assets/kit/re-c.svg" alt="Re-C" />
+      <span>Re-C</span>
+    </div>
+    <div class="card" onclick="openKit('re-m')">
+      <img src="assets/kit/re-m.svg" alt="Re-M" />
+      <span>Re-M</span>
+    </div>
+
+    <!-- Suppliers & Distributors -->
+    <div class="section-full section-title">Suppliers & Distributors</div>
+    <div class="card" onclick="viewSuppliers()">
+      <img src="assets/icons/suppliers.svg" alt="Suppliers" />
+      <span>Suppliers</span>
+    </div>
+    <div class="card" onclick="viewDistributors()">
+      <img src="assets/icons/distributors.svg" alt="Distributors" />
+      <span>Distributors</span>
+    </div>
+
+    <!-- Weather Widget -->
+    <div class="section-full weather">
+      <div class="section-title">Current Weather</div>
+      <div id="weatherWidget">Loading weather...</div>
+    </div>
+
+    <!-- Business Updates -->
+    <div class="section-full updates">
+      <div class="section-title">Business Updates</div>
+      <ul id="updatesList">
+        <li>Loading updates...</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bubble bubble1"></div>
+  <div class="bubble bubble2"></div>
+  <div class="bottom-nav">
+    <a href="feed.html" class="nav-item"><img src="assets/icons/feed.svg" alt="Feed"><span>Feed</span></a>
+    <a href="chat.html" class="nav-item"><img src="assets/icons/chat.svg" alt="Chat"><span>Chat</span></a>
+    <a href="discover.html" class="nav-item"><img src="assets/icons/discover.svg" alt="Discover"><span>Discover</span></a>
+    <a href="wallet.html" class="nav-item"><img src="assets/icons/wallet.svg" alt="Wallet"><span>Wallet</span></a>
+    <a href="dashboard.html" class="nav-item"><img src="assets/icons/dashboard.svg" alt="Dashboard"><span>Dashboard</span></a>
+  </div>
+
+  <script>
+    // Placeholder functions for service actions
+    function startBusiness() { alert('Start Business wizard...'); }
+    function getBranding() { alert('Open Re-EL Branding...'); }
+    function getAppDev() { alert('App Development options...'); }
+    function getWebsite() { alert('Website Development options...'); }
+    function getDocuments() { alert('Legal document templates...'); }
+    function openKit(app) { alert('Launch ' + app + ' app...'); }
+    function viewSuppliers() { alert('Browse suppliers...'); }
+    function viewDistributors() { alert('Browse distributors...'); }
+
+    // Fetch weather via RapidAPI
+    async function loadWeather() {
+      const el = document.getElementById('weatherWidget');
+      // TODO: call RapidAPI for weather
+      el.textContent = '25°C, Sunny';
+    }
+    // Fetch business updates via RapidAPI
+    async function loadUpdates() {
+      const ul = document.getElementById('updatesList');
+      // TODO: call RapidAPI for business news
+      ul.innerHTML = '<li>Market closes higher today.</li><li>New regulations announced.</li>';
+    }
+    loadWeather();
+    loadUpdates();
+  </script>
+</body>
+</html>
