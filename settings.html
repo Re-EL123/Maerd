@@ -13,14 +13,17 @@
       --card-bg: rgba(255,255,255,0.05);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-    body { background: var(--primary); color: var(--background); display: flex; flex-direction: column; height: 100vh; }
+    body { background: var(--primary); color: var(--background); display: flex; flex-direction: column; height: 100vh; position: relative; }
     .spectrum-strip { height: 4px; background: var(--accent); }
     .header { padding: 1rem; text-align: center; font-size: 1.5rem; font-weight: bold; background: var(--glass); backdrop-filter: blur(10px); }
     .container { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 1rem; position: relative; }
     .section { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 1rem; padding: 1rem; }
     .section h3 { margin-bottom: 0.5rem; font-size: 1rem; }
     label { display: block; margin: 0.5rem 0; font-size: 0.9rem; }
-    input[type="text"], input[type="email"], input[type="password"], select { width: 100%; padding: 0.75rem; border: none; border-radius: 0.75rem; background: rgba(255,255,255,0.05); color: white; margin-top: 0.25rem; }
+    input[type="text"], input[type="email"], input[type="password"], select {
+      width: 100%; padding: 0.75rem; border: none; border-radius: 0.75rem;
+      background: rgba(255,255,255,0.05); color: white; margin-top: 0.25rem;
+    }
     .toggle { display: flex; align-items: center; justify-content: space-between; margin: 0.5rem 0; }
     .toggle input { width: auto; }
     .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 1rem; background: white; color: black; font-weight: bold; cursor: pointer; transition: background 0.3s; margin-top: 1rem; }
@@ -40,31 +43,45 @@
     <!-- Profile Section -->
     <div class="section">
       <h3>Profile</h3>
-      <label>Business Name<input type="text" id="businessName" placeholder="Your Business Name"></label>
-      <label>Email Address<input type="email" id="email" placeholder="you@example.com"></label>
-      <label>Phone Number<input type="text" id="phone" placeholder="+27 12 345 6789"></label>
+      <label>Business Name
+        <input type="text" id="businessName" placeholder="Your Business Name">
+      </label>
+      <label>Email Address
+        <input type="email" id="email" placeholder="you@example.com">
+      </label>
+      <label>Phone Number
+        <input type="text" id="phone" placeholder="+27 12 345 6789">
+      </label>
       <button class="btn" onclick="saveProfile()">Save Profile</button>
     </div>
     <!-- Security Section -->
     <div class="section">
       <h3>Security</h3>
-      <label>Change Password<input type="password" id="newPassword" placeholder="New Password"></label>
-      <label>Confirm Password<input type="password" id="confirmPassword" placeholder="Confirm Password"></label>
+      <label>Change Password
+        <input type="password" id="newPassword" placeholder="New Password">
+      </label>
+      <label>Confirm Password
+        <input type="password" id="confirmPassword" placeholder="Confirm Password">
+      </label>
       <button class="btn" onclick="changePassword()">Update Password</button>
     </div>
     <!-- Notifications Section -->
     <div class="section">
       <h3>Notifications</h3>
-      <div class="toggle"><span>New Messages</span><input type="checkbox" id="notifMessages" checked></div>
-      <div class="toggle"><span>Service Requests</span><input type="checkbox" id="notifRequests" checked></div>
+      <div class="toggle"><span>New Messages</span><input type="checkbox" id="notifMessages"></div>
+      <div class="toggle"><span>Service Requests</span><input type="checkbox" id="notifRequests"></div>
       <div class="toggle"><span>Promotions</span><input type="checkbox" id="notifPromos"></div>
       <button class="btn" onclick="saveNotifications()">Save Notifications</button>
     </div>
     <!-- API & Payment Section -->
     <div class="section">
       <h3>API & Payment</h3>
-      <label>RapidAPI Key<input type="text" id="apiKey" placeholder="Enter RapidAPI Key"></label>
-      <label>Yoco Public Key<input type="text" id="yocoKey" placeholder="Enter Yoco Public Key"></label>
+      <label>RapidAPI Key
+        <input type="text" id="apiKey" placeholder="Enter RapidAPI Key">
+      </label>
+      <label>Yoco Public Key
+        <input type="text" id="yocoKey" placeholder="Enter Yoco Public Key">
+      </label>
       <button class="btn" onclick="saveKeys()">Save Keys</button>
     </div>
     <!-- Account Section -->
@@ -75,18 +92,107 @@
   <div class="bubble bubble1"></div>
   <div class="bubble bubble2"></div>
   <div class="bottom-nav">
-    <a href="feed.html" class="nav-item"><img src="assets/icons/feed.svg" alt="Feed"><span>Feed</span></a>
-    <a href="chat.html" class="nav-item"><img src="assets/icons/chat.svg" alt="Chat"><span>Chat</span></a>
-    <a href="discover.html" class="nav-item"><img src="assets/icons/discover.svg" alt="Discover"><span>Discover</span></a>
-    <a href="wallet.html" class="nav-item"><img src="assets/icons/wallet.svg" alt="Wallet"><span>Wallet</span></a>
-    <a href="dashboard.html" class="nav-item"><img src="assets/icons/dashboard.svg" alt="Dashboard"><span>Dashboard</span></a>
+    <a href="feed.html"    class="nav-item"><img src="assets/icons/feed.svg"    alt="Feed"><span>Feed</span></a>
+    <a href="chat.html"    class="nav-item"><img src="assets/icons/chat.svg"    alt="Chat"><span>Chat</span></a>
+    <a href="discover.html"class="nav-item"><img src="assets/icons/discover.svg"alt="Discover"><span>Discover</span></a>
+    <a href="wallet.html"  class="nav-item"><img src="assets/icons/wallet.svg"  alt="Wallet"><span>Wallet</span></a>
+    <a href="dashboard.html"class="nav-item"><img src="assets/icons/dashboard.svg"alt="Dashboard"><span>Dashboard</span></a>
   </div>
-  <script>
-    function saveProfile() { /* TODO: Persist to Firebase */ alert('Profile saved'); }
-    function changePassword() { /* TODO: Handle password change */ alert('Password updated'); }
-    function saveNotifications() { /* TODO: Save prefs */ alert('Notification settings saved'); }
-    function saveKeys() { /* TODO: Securely store API keys */ alert('API & Payment keys saved'); }
-    function logout() { /* TODO: Firebase logout */ alert('Logged out'); }
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, updatePassword, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getDatabase, ref, update, get } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWUXQs1W0IBT2J27eEllfT8jPtZD6Fx20",
+      authDomain: "re-el-eed0d.firebaseapp.com",
+      databaseURL: "https://re-el-eed0d-default-rtdb.firebaseio.com",
+      projectId: "re-el-eed0d",
+      storageBucket: "re-el-eed0d.appspot.com",
+      messagingSenderId: "676690470943",
+      appId: "1:676690470943:web:c18bc16fbf23445c9ecd2a",
+      measurementId: "G-BXJEJLTTD1"
+    };
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getDatabase(app);
+
+    // preload current values
+    auth.onAuthStateChanged(user => {
+      if (!user) return window.location.href = 'index.html';
+      const uid = user.uid;
+      get(ref(db, `users/${uid}`)).then(snap => {
+        const data = snap.val() || {};
+        document.getElementById('businessName').value = data.businessName || '';
+        document.getElementById('email').value        = data.email        || user.email;
+        document.getElementById('phone').value        = data.phone        || '';
+      });
+      get(ref(db, `settings/notifications/${uid}`)).then(snap => {
+        const n = snap.val() || {};
+        document.getElementById('notifMessages').checked = !!n.messages;
+        document.getElementById('notifRequests').checked = !!n.requests;
+        document.getElementById('notifPromos').checked   = !!n.promos;
+      });
+      get(ref(db, `settings/keys/${uid}`)).then(snap => {
+        const k = snap.val() || {};
+        document.getElementById('apiKey').value  = k.rapidapi || '';
+        document.getElementById('yocoKey').value = k.yoco     || '';
+      });
+    });
+
+    function saveProfile() {
+      const user = auth.currentUser;
+      const uid  = user.uid;
+      const updates = {};
+      updates[`users/${uid}/businessName`] = document.getElementById('businessName').value.trim();
+      updates[`users/${uid}/email`]        = document.getElementById('email').value.trim();
+      updates[`users/${uid}/phone`]        = document.getElementById('phone').value.trim();
+      update(ref(db), updates)
+        .then(() => alert('Profile saved'))
+        .catch(e => alert(e.message));
+    }
+
+    function changePassword() {
+      const newPass = document.getElementById('newPassword').value;
+      const conf    = document.getElementById('confirmPassword').value;
+      if (newPass !== conf) return alert('Passwords do not match');
+      updatePassword(auth.currentUser, newPass)
+        .then(() => alert('Password updated'))
+        .catch(e => alert(e.message));
+    }
+
+    function saveNotifications() {
+      const user = auth.currentUser;
+      const uid  = user.uid;
+      const data = {
+        messages: document.getElementById('notifMessages').checked,
+        requests: document.getElementById('notifRequests').checked,
+        promos:   document.getElementById('notifPromos').checked
+      };
+      update(ref(db, `settings/notifications/${uid}`), data)
+        .then(() => alert('Notification settings saved'))
+        .catch(e => alert(e.message));
+    }
+
+    function saveKeys() {
+      const user = auth.currentUser;
+      const uid  = user.uid;
+      const data = {
+        rapidapi: document.getElementById('apiKey').value.trim(),
+        yoco:     document.getElementById('yocoKey').value.trim()
+      };
+      update(ref(db, `settings/keys/${uid}`), data)
+        .then(() => alert('API & Payment keys saved'))
+        .catch(e => alert(e.message));
+    }
+
+    function logout() {
+      signOut(auth)
+        .then(() => window.location.href = 'index.html')
+        .catch(e => alert(e.message));
+    }
   </script>
 </body>
 </html>
