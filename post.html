@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Post | Maerd</title>
+  <style>
+    :root {
+      --primary: #000;
+      --background: #fff;
+      --accent: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
+      --glass: rgba(255, 255, 255, 0.1);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body {
+      background: var(--primary);
+      color: var(--background);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .spectrum-strip {
+      height: 4px;
+      width: 100%;
+      background: var(--accent);
+      animation: pulse 2s linear infinite;
+    }
+    @keyframes pulse {
+      0% { filter: brightness(1); }
+      50% { filter: brightness(2); }
+      100% { filter: brightness(1); }
+    }
+    .header {
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+    }
+    .post-container {
+      padding: 1rem;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .post {
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--background);
+    }
+    .author-info h3 {
+      margin: 0;
+      font-size: 1rem;
+      cursor: pointer;
+      color: var(--background);
+      text-decoration: underline;
+    }
+    .timestamp {
+      font-size: 0.75rem;
+      color: #ccc;
+    }
+    .post-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .like-button {
+      cursor: pointer;
+      font-size: 1.25rem;
+    }
+    .comments-section {
+      margin-top: 1rem;
+    }
+    .comment {
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .comment .author {
+      font-weight: bold;
+      cursor: pointer;
+      color: var(--background);
+    }
+    .comment .reply {
+      margin-left: 1.5rem;
+      margin-top: 0.25rem;
+    }
+    .comment-input {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+    .comment-input input {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 1rem;
+      border: none;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+    }
+    .comment-input button {
+      padding: 0.75rem 1rem;
+      background: white;
+      color: black;
+      border: none;
+      border-radius: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      opacity: 0.05;
+      filter: blur(20px);
+    }
+    .bubble1 { width: 150px; height: 150px; top: 80px; right: -50px; }
+    .bubble2 { width: 100px; height: 100px; bottom: 100px; left: -40px; }
+  </style>
+</head>
+<body>
+  <div class="spectrum-strip"></div>
+  <div class="header">Viewing Post</div>
+
+  <div class="post-container">
+    <div class="post">
+      <div class="post-header">
+        <img class="avatar" src="assets/avatars/creative.png" alt="Creative Co." />
+        <div class="author-info">
+          <h3 onclick="viewProfile('creative')">Creative Co.</h3>
+          <span class="timestamp">about an hour ago</span>
+        </div>
+      </div>
+      <p>Check out these fresh branding templates we just dropped! 🎨</p>
+
+      <div class="post-actions">
+        <span class="like-button" onclick="likePost()">❤️ <span id="likeCount">12</span></span>
+      </div>
+
+      <div class="comments-section" id="comments">
+        <div class="comment">
+          <span class="author" onclick="viewProfile('mobiuser')">MobiUser</span>: Love this design!
+        </div>
+        <div class="comment reply">
+          <span class="author" onclick="viewProfile('creative')">Creative Co.</span>: Thank you!
+        </div>
+        <!-- More comments go here -->
+      </div>
+
+      <div class="comment-input">
+        <input type="text" id="commentInput" placeholder="Write a comment..." />
+        <button onclick="submitComment()">Comment</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bubble bubble1"></div>
+  <div class="bubble bubble2"></div>
+
+  <script>
+    let likeCount = 12;
+    function likePost() {
+      likeCount++;
+      document.getElementById('likeCount').innerText = likeCount;
+      // TODO: Update like in Firebase
+    }
+
+    function submitComment() {
+      const input = document.getElementById('commentInput');
+      const comment = input.value.trim();
+      if (!comment) return;
+      const div = document.createElement('div');
+      div.className = 'comment';
+      div.innerHTML = `<span class="author" onclick="viewProfile('you')">You</span>: ${comment}`;
+      document.getElementById('comments').appendChild(div);
+      input.value = '';
+      // TODO: Store comment in Firebase
+    }
+
+    function viewProfile(username) {
+      window.location.href = `view_profile.html?user=${username}`;
+    }
+  </script>
+</body>
+</html>
