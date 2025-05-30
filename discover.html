@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maerd | Discover</n  <!-- Discover Page -->
-</head>
-<body>
+  <title>Maerd | Discover</title>
   <style>
     :root {
       --primary: #000;
@@ -23,8 +21,7 @@
     .card:hover { transform: scale(1.05); }
     .card img { width: 50px; height: 50px; margin-bottom: 0.5rem; }
     .section-full { grid-column: 1 / -1; }
-    .weather, .updates { background: var(--glass); backdrop-filter: blur(10px); border-radius: 1rem; padding: 1rem; margin: 1rem 0; }
-    .section-title { font-size: 1.25rem; margin: 1rem 0 0.5rem; }
+    .section-title { font-size: 1.25rem; margin: 1rem 0 0.5rem; color: #ccc; }
     .bottom-nav { display: flex; justify-content: space-around; align-items: center; padding: 0.5rem 0; background: var(--glass); backdrop-filter: blur(10px); }
     .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: var(--background); text-decoration: none; }
     .nav-item img { width: 24px; height: 24px; margin-bottom: 0.25rem; }
@@ -42,7 +39,7 @@
       <span>Start Business</span>
     </div>
     <div class="card" onclick="getBranding()">
-      <img src="assets/icons/branding.svg" alt="Branding" />
+      <img src="assets/icons/branding.svg" alt="Re-EL Branding" />
       <span>Re-EL Branding</span>
     </div>
     <div class="card" onclick="getAppDev()">
@@ -54,7 +51,7 @@
       <span>Website Development</span>
     </div>
     <div class="card" onclick="getDocuments()">
-      <img src="assets/icons/documents.svg" alt="Documents" />
+      <img src="assets/icons/documents.svg" alt="Legal Documents" />
       <span>Legal Documents</span>
     </div>
 
@@ -84,19 +81,6 @@
       <span>Distributors</span>
     </div>
 
-    <!-- Weather Widget -->
-    <div class="section-full weather">
-      <div class="section-title">Current Weather</div>
-      <div id="weatherWidget">Loading weather...</div>
-    </div>
-
-    <!-- Business Updates -->
-    <div class="section-full updates">
-      <div class="section-title">Business Updates</div>
-      <ul id="updatesList">
-        <li>Loading updates...</li>
-      </ul>
-    </div>
   </div>
 
   <div class="bubble bubble1"></div>
@@ -110,7 +94,6 @@
   </div>
 
   <script>
-    // Placeholder functions for service actions
     function startBusiness() { alert('Start Business wizard...'); }
     function getBranding() { alert('Open Re-EL Branding...'); }
     function getAppDev() { alert('App Development options...'); }
@@ -119,21 +102,6 @@
     function openKit(app) { alert('Launch ' + app + ' app...'); }
     function viewSuppliers() { alert('Browse suppliers...'); }
     function viewDistributors() { alert('Browse distributors...'); }
-
-    // Fetch weather via RapidAPI
-    async function loadWeather() {
-      const el = document.getElementById('weatherWidget');
-      // TODO: call RapidAPI for weather
-      el.textContent = '25°C, Sunny';
-    }
-    // Fetch business updates via RapidAPI
-    async function loadUpdates() {
-      const ul = document.getElementById('updatesList');
-      // TODO: call RapidAPI for business news
-      ul.innerHTML = '<li>Market closes higher today.</li><li>New regulations announced.</li>';
-    }
-    loadWeather();
-    loadUpdates();
   </script>
 </body>
 </html>
