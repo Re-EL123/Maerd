@@ -1,63 +1,158 @@
-<!-- HEAD section unchanged -->
-<style>
-  /* ...existing styles... */
-  .spectrum-strip.animated {
-    background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet);
-    background-size: 1400% 1400%;
-    animation: moveSpectrum 5s linear infinite;
-  }
-  @keyframes moveSpectrum {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
-  }
-  .story-bar {
-    display: flex;
-    gap: 1rem;
-    overflow-x: auto;
-    padding: 1rem;
-    margin: 1rem;
-    background: var(--glass);
-    backdrop-filter: blur(10px);
-    border-radius: 1rem;
-  }
-  .story {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    flex-shrink: 0;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-  }
-  .story::after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: lime;
-  }
-  .post-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.85rem;
-    margin-top: 0.75rem;
-    color: #ccc;
-  }
-  .post-footer button {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 0.85rem;
-    margin-right: 0.5rem;
-  }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maerd | Feed</title>
+  <style>
+    :root {
+      --primary: #000;
+      --background: #fff;
+      --accent: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
+      --glass: rgba(255, 255, 255, 0.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: var(--primary); color: var(--background); height: 100vh; display: flex; flex-direction: column; position: relative; }
+
+    .spectrum-strip {
+      height: 4px;
+      width: 100%;
+      background: var(--accent);
+      animation: pulse 2s linear infinite;
+    }
+    @keyframes pulse {
+      0% { filter: brightness(1); }
+      50% { filter: brightness(2); }
+      100% { filter: brightness(1); }
+    }
+
+    .header { padding: 1rem; text-align: center; font-size: 1.5rem; font-weight: bold; background: var(--glass); backdrop-filter: blur(10px); }
+
+    .story-strip {
+      display: flex;
+      overflow-x: auto;
+      gap: 0.75rem;
+      padding: 1rem;
+    }
+    .story {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .post-box {
+      display: flex;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      margin: 1rem;
+    }
+    .post-box textarea {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 1rem;
+      border: none;
+      resize: none;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+    }
+    .post-box button {
+      padding: 0.75rem 1rem;
+      background: white;
+      color: black;
+      border: none;
+      border-radius: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .post-box button:hover { background: #eee; }
+
+    .feed { flex: 1; overflow-y: auto; padding: 1rem; }
+
+    .post {
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--background);
+    }
+    .author-info h3 { margin: 0; font-size: 1rem; }
+    .timestamp {
+      font-size: 0.75rem;
+      color: #ccc;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+    }
+    .actions button {
+      background: transparent;
+      border: none;
+      color: #ccc;
+      cursor: pointer;
+    }
+    .actions button:hover {
+      text-decoration: underline;
+    }
+
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0.5rem 0;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--background);
+      text-decoration: none;
+    }
+    .nav-item img {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 0.25rem;
+    }
+
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      opacity: 0.05;
+      filter: blur(20px);
+    }
+    .bubble1 { width: 150px; height: 150px; top: 80px; right: -50px; }
+    .bubble2 { width: 100px; height: 100px; bottom: 100px; left: -40px; }
+
+    .container { position: relative; flex: 1; display: flex; flex-direction: column; }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -65,10 +160,10 @@
     <div class="header">Maerd Feed</div>
 
     <!-- Stories Section -->
-    <div class="story-bar" id="storyBar">
-      <div class="story" style="background-image:url('assets/avatars/bakery.png')" title="John's Story"></div>
-      <div class="story" style="background-image:url('assets/avatars/mobitech.png')" title="MobiTech Story"></div>
-      <!-- More stories -->
+    <div class="story-strip">
+      <img class="story" src="assets/stories/user1.jpg" onclick="viewStory('user1')" alt="story"/>
+      <img class="story" src="assets/stories/user2.jpg" onclick="viewStory('user2')" alt="story"/>
+      <img class="story" src="assets/stories/user3.jpg" onclick="viewStory('user3')" alt="story"/>
     </div>
 
     <!-- Posting Section -->
@@ -77,30 +172,29 @@
       <button onclick="submitPost()">Post</button>
     </div>
 
-    <!-- Feed Posts -->
     <div class="feed" id="feed">
-      <!-- JS-rendered posts -->
+      <!-- Dynamic posts will be inserted here -->
     </div>
 
-    <!-- Navigation & Background Bubbles -->
     <div class="bottom-nav">
-      <!-- ...navigation icons... -->
+      <a href="feed.html" class="nav-item"><img src="assets/icons/feed.svg" alt="Feed"/><span>Feed</span></a>
+      <a href="chat.html" class="nav-item"><img src="assets/icons/chat.svg" alt="Chat"/><span>Chat</span></a>
+      <a href="discover.html" class="nav-item"><img src="assets/icons/discover.svg" alt="Discover"/><span>Discover</span></a>
+      <a href="wallet.html" class="nav-item"><img src="assets/icons/wallet.svg" alt="Wallet"/><span>Wallet</span></a>
+      <a href="dashboard.html" class="nav-item"><img src="assets/icons/dashboard.svg" alt="Dashboard"/><span>Dashboard</span></a>
     </div>
+
     <div class="bubble bubble1"></div>
     <div class="bubble bubble2"></div>
   </div>
 
   <script>
     const feedEl = document.getElementById('feed');
-    const spectrumStrip = document.getElementById('spectrumStrip');
 
-    function toggleSpectrumLoading(state) {
-      spectrumStrip.classList.toggle('animated', state);
-    }
-
-    function addPost({ id, author, content, avatar, timestamp, likes = 0, views = 0 }) {
+    function addPost(author, content, avatar = 'assets/avatars/default.png', timestamp = 'just now', likes = 0, views = 0) {
       const post = document.createElement('div');
       post.className = 'post';
+      const postId = `post-${Date.now()}`;
       post.innerHTML = `
         <div class="post-header">
           <img class="avatar" src="${avatar}" alt="${author}" />
@@ -110,86 +204,40 @@
           </div>
         </div>
         <p>${content}</p>
-        <div class="post-footer">
-          <div>
-            <button onclick="likePost('${id}')">❤️ <span id="likes-${id}">${likes}</span></button>
-            <button onclick="commentOnPost('${id}')">💬 Comment</button>
-          </div>
-          <div>
-            👁️ <span id="views-${id}">${views}</span> views
-          </div>
+        <div class="actions">
+          <span>❤️ <span id="${postId}-likes">${likes}</span> Likes</span>
+          <span>👁️ <span id="${postId}-views">${views + 1}</span> Views</span>
+          <button onclick="likePost('${postId}')">Like</button>
+          <button onclick="location.href='post.html?id=${postId}'">Comment</button>
         </div>
       `;
-      post.setAttribute('data-post-id', id);
       feedEl.insertBefore(post, feedEl.firstChild);
-      incrementView(id);
     }
 
     function submitPost() {
       const textarea = document.getElementById('newPost');
       const content = textarea.value.trim();
       if (!content) return;
-
-      toggleSpectrumLoading(true);
-
-      const id = 'post_' + Date.now(); // Simplified ID generation
-      const newPost = {
-        id,
-        author: 'You',
-        avatar: 'assets/avatars/default.png',
-        timestamp: 'just now',
-        content,
-        likes: 0,
-        views: 0
-      };
-
-      // Simulate upload delay
-      setTimeout(() => {
-        addPost(newPost);
-        textarea.value = '';
-        toggleSpectrumLoading(false);
-        // TODO: Push to Firebase
-      }, 1000);
+      addPost('You', content);
+      textarea.value = '';
+      // TODO: Save post to Firebase
     }
 
     function likePost(postId) {
-      const likeSpan = document.getElementById(`likes-${postId}`);
-      let current = parseInt(likeSpan.textContent);
-      likeSpan.textContent = current + 1;
-      // TODO: Update Firebase like count
+      const likeSpan = document.getElementById(`${postId}-likes`);
+      let count = parseInt(likeSpan.textContent);
+      likeSpan.textContent = count + 1;
+      // TODO: Update likes in Firebase
     }
 
-    function incrementView(postId) {
-      const viewSpan = document.getElementById(`views-${postId}`);
-      let current = parseInt(viewSpan.textContent);
-      viewSpan.textContent = current + 1;
-      // TODO: Update Firebase view count
+    function viewStory(userId) {
+      window.location.href = `view_story.html?user=${userId}`;
     }
 
-    function commentOnPost(postId) {
-      window.location.href = `post.html?postId=${postId}`;
-    }
-
-    // Example static posts
-    addPost({
-      id: 'p1',
-      author: "John's Bakery",
-      content: "Welcome to our new store! We bake fresh bread every day. 🍞",
-      avatar: 'assets/avatars/bakery.png',
-      timestamp: 'just now',
-      likes: 4,
-      views: 19
-    });
-
-    addPost({
-      id: 'p2',
-      author: 'MobiTech Solutions',
-      content: 'Launching our new app next week. Stay tuned!',
-      avatar: 'assets/avatars/mobitech.png',
-      timestamp: '20 minutes ago',
-      likes: 12,
-      views: 45
-    });
+    // Example post
+    addPost("John's Bakery", "Welcome to our new store! We bake fresh bread every day. 🍞", "assets/avatars/bakery.png", "just now", 2, 10);
+    addPost("MobiTech Solutions", "Launching our new app next week. Stay tuned!", "assets/avatars/mobitech.png", "20 minutes ago", 1, 8);
+    addPost("Creative Co.", "Check out these fresh branding templates we just dropped! 🎨", "assets/avatars/creative.png", "about an hour ago", 4, 14);
   </script>
 </body>
 </html>
