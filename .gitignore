@@ -1,0 +1,23 @@
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+logs/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE settings
+.vscode/
+.idea/
+
+# Firebase (if you're using emulators or config files)
+firebase-debug.log
+.firebaserc
+
+# Misc
+*.bak
+*.tmp
