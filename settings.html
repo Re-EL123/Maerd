@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maerd | Settings</title>
+  <style>
+    :root {
+      --primary: #000;
+      --background: #fff;
+      --accent: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
+      --glass: rgba(255, 255, 255, 0.1);
+      --card-bg: rgba(255,255,255,0.05);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: var(--primary); color: var(--background); display: flex; flex-direction: column; height: 100vh; }
+    .spectrum-strip { height: 4px; background: var(--accent); }
+    .header { padding: 1rem; text-align: center; font-size: 1.5rem; font-weight: bold; background: var(--glass); backdrop-filter: blur(10px); }
+    .container { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 1rem; position: relative; }
+    .section { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 1rem; padding: 1rem; }
+    .section h3 { margin-bottom: 0.5rem; font-size: 1rem; }
+    label { display: block; margin: 0.5rem 0; font-size: 0.9rem; }
+    input[type="text"], input[type="email"], input[type="password"], select { width: 100%; padding: 0.75rem; border: none; border-radius: 0.75rem; background: rgba(255,255,255,0.05); color: white; margin-top: 0.25rem; }
+    .toggle { display: flex; align-items: center; justify-content: space-between; margin: 0.5rem 0; }
+    .toggle input { width: auto; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 1rem; background: white; color: black; font-weight: bold; cursor: pointer; transition: background 0.3s; margin-top: 1rem; }
+    .btn:hover { background: #eee; }
+    .bottom-nav { display: flex; justify-content: space-around; align-items: center; padding: 0.5rem 0; background: var(--glass); backdrop-filter: blur(10px); }
+    .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: var(--background); text-decoration: none; }
+    .nav-item img { width: 24px; height: 24px; margin-bottom: 0.25rem; }
+    .bubble { position: absolute; border-radius: 50%; background: white; opacity: 0.05; filter: blur(20px); }
+    .bubble1 { width: 100px; height: 100px; top: 60px; right: -30px; }
+    .bubble2 { width: 80px; height: 80px; bottom: 100px; left: -40px; }
+  </style>
+</head>
+<body>
+  <div class="spectrum-strip"></div>
+  <div class="header">Settings</div>
+  <div class="container">
+    <!-- Profile Section -->
+    <div class="section">
+      <h3>Profile</h3>
+      <label>Business Name<input type="text" id="businessName" placeholder="Your Business Name"></label>
+      <label>Email Address<input type="email" id="email" placeholder="you@example.com"></label>
+      <label>Phone Number<input type="text" id="phone" placeholder="+27 12 345 6789"></label>
+      <button class="btn" onclick="saveProfile()">Save Profile</button>
+    </div>
+    <!-- Security Section -->
+    <div class="section">
+      <h3>Security</h3>
+      <label>Change Password<input type="password" id="newPassword" placeholder="New Password"></label>
+      <label>Confirm Password<input type="password" id="confirmPassword" placeholder="Confirm Password"></label>
+      <button class="btn" onclick="changePassword()">Update Password</button>
+    </div>
+    <!-- Notifications Section -->
+    <div class="section">
+      <h3>Notifications</h3>
+      <div class="toggle"><span>New Messages</span><input type="checkbox" id="notifMessages" checked></div>
+      <div class="toggle"><span>Service Requests</span><input type="checkbox" id="notifRequests" checked></div>
+      <div class="toggle"><span>Promotions</span><input type="checkbox" id="notifPromos"></div>
+      <button class="btn" onclick="saveNotifications()">Save Notifications</button>
+    </div>
+    <!-- API & Payment Section -->
+    <div class="section">
+      <h3>API & Payment</h3>
+      <label>RapidAPI Key<input type="text" id="apiKey" placeholder="Enter RapidAPI Key"></label>
+      <label>Yoco Public Key<input type="text" id="yocoKey" placeholder="Enter Yoco Public Key"></label>
+      <button class="btn" onclick="saveKeys()">Save Keys</button>
+    </div>
+    <!-- Account Section -->
+    <div class="section">
+      <button class="btn" onclick="logout()">Log Out</button>
+    </div>
+  </div>
+  <div class="bubble bubble1"></div>
+  <div class="bubble bubble2"></div>
+  <div class="bottom-nav">
+    <a href="feed.html" class="nav-item"><img src="assets/icons/feed.svg" alt="Feed"><span>Feed</span></a>
+    <a href="chat.html" class="nav-item"><img src="assets/icons/chat.svg" alt="Chat"><span>Chat</span></a>
+    <a href="discover.html" class="nav-item"><img src="assets/icons/discover.svg" alt="Discover"><span>Discover</span></a>
+    <a href="wallet.html" class="nav-item"><img src="assets/icons/wallet.svg" alt="Wallet"><span>Wallet</span></a>
+    <a href="dashboard.html" class="nav-item"><img src="assets/icons/dashboard.svg" alt="Dashboard"><span>Dashboard</span></a>
+  </div>
+  <script>
+    function saveProfile() { /* TODO: Persist to Firebase */ alert('Profile saved'); }
+    function changePassword() { /* TODO: Handle password change */ alert('Password updated'); }
+    function saveNotifications() { /* TODO: Save prefs */ alert('Notification settings saved'); }
+    function saveKeys() { /* TODO: Securely store API keys */ alert('API & Payment keys saved'); }
+    function logout() { /* TODO: Firebase logout */ alert('Logged out'); }
+  </script>
+</body>
+</html>
