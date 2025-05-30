@@ -5,170 +5,118 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Maerd – Business Begins with a Dream</title>
   <style>
-    :root {
-      --primary: #000;
-      --background: #fff;
-      --accent: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
-      --glass: rgba(255, 255, 255, 0.1);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-
-    body {
-      background: var(--primary);
-      color: var(--background);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .auth-container {
-      background: var(--glass);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      padding: 2rem;
-      border-radius: 2rem;
-      width: 90%;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      position: relative;
-    }
-
-    .spectrum-strip {
-      height: 5px;
-      width: 100%;
-      background: var(--accent);
-      border-radius: 10px;
-      margin-bottom: 1rem;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 1.8rem;
-      font-weight: bold;
-    }
-
-    input {
-      padding: 0.8rem;
-      border: none;
-      border-radius: 1rem;
-      outline: none;
-      background: rgba(255, 255, 255, 0.05);
-      color: white;
-    }
-
-    input::placeholder {
-      color: #ccc;
-    }
-
-    button {
-      padding: 0.9rem;
-      background: white;
-      color: black;
-      border: none;
-      border-radius: 1rem;
-      font-weight: bold;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    button:hover {
-      background: #eee;
-    }
-
-    .toggle {
-      text-align: center;
-      font-size: 0.9rem;
-      color: #ccc;
-      cursor: pointer;
-    }
-
-    .toggle span {
-      color: white;
-      font-weight: bold;
-    }
-
-    .bubble {
-      position: absolute;
-      border-radius: 50%;
-      background: white;
-      opacity: 0.1;
-      filter: blur(15px);
-    }
-
-    .bubble1 { width: 100px; height: 100px; top: -40px; right: -40px; }
-    .bubble2 { width: 70px; height: 70px; bottom: -30px; left: -20px; }
+    /* existing styles omitted for brevity */
   </style>
 </head>
 <body>
-  <div class="auth-container">
+  <div class="auth-container" id="authContainer">
     <div class="spectrum-strip"></div>
     <h1 id="form-title">Login to Maerd</h1>
     <input type="text" id="realName" placeholder="Your Real Name" style="display: none;" />
     <input type="text" id="businessName" placeholder="Business Name" style="display: none;" />
     <input type="email" id="email" placeholder="Email Address" />
     <input type="password" id="password" placeholder="Password" />
-    <button onclick="handleAuth()">Login</button>
-    <div class="toggle" onclick="toggleForm()">
-      Don't have an account? <span>Sign Up</span>
-    </div>
+    <button id="actionButton">Login</button>
+    <div class="toggle" id="toggleForm">Don't have an account? <span>Sign Up</span></div>
     <div class="bubble bubble1"></div>
     <div class="bubble bubble2"></div>
   </div>
 
-  <script>
+  <div class="auth-container" id="verifyContainer" style="display:none;">
+    <div class="spectrum-strip"></div>
+    <h1>Email Verification</h1>
+    <p>Please check your inbox for a verification link. Once verified, click 'I'm Verified' to continue.</p>
+    <button id="resendButton">Resend Email</button>
+    <button id="checkButton">I'm Verified</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, reload } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getDatabase, ref, set, update } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
+
+    const firebaseConfig = { /* your config */ };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
     let isSignup = false;
+    const toggleEl = document.getElementById('toggleForm');
+    const actionBtn = document.getElementById('actionButton');
+    const titleEl = document.getElementById('form-title');
+    const realNameEl = document.getElementById('realName');
+    const businessNameEl = document.getElementById('businessName');
+    const authContainer = document.getElementById('authContainer');
+    const verifyContainer = document.getElementById('verifyContainer');
+    const resendBtn = document.getElementById('resendButton');
+    const checkBtn = document.getElementById('checkButton');
 
-    function toggleForm() {
+    toggleEl.addEventListener('click', () => {
       isSignup = !isSignup;
-      const title = document.getElementById('form-title');
-      const realName = document.getElementById('realName');
-      const businessName = document.getElementById('businessName');
-      const toggle = document.querySelector('.toggle span');
-      const button = document.querySelector('button');
-
       if (isSignup) {
-        title.textContent = 'Create Your Maerd Account';
-        realName.style.display = 'block';
-        businessName.style.display = 'block';
-        button.textContent = 'Sign Up';
-        toggle.textContent = 'Login';
-        document.querySelector('.toggle').childNodes[0].textContent = 'Already have an account? ';
+        titleEl.textContent = 'Create Your Maerd Account';
+        realNameEl.style.display = 'block';
+        businessNameEl.style.display = 'block';
+        actionBtn.textContent = 'Sign Up';
+        toggleEl.innerHTML = 'Already have an account? <span>Login</span>';
       } else {
-        title.textContent = 'Login to Maerd';
-        realName.style.display = 'none';
-        businessName.style.display = 'none';
-        button.textContent = 'Login';
-        toggle.textContent = 'Sign Up';
-        document.querySelector('.toggle').childNodes[0].textContent = "Don't have an account? ";
+        titleEl.textContent = 'Login to Maerd';
+        realNameEl.style.display = 'none';
+        businessNameEl.style.display = 'none';
+        actionBtn.textContent = 'Login';
+        toggleEl.innerHTML = "Don't have an account? <span>Sign Up</span>";
       }
-    }
+    });
 
-    function handleAuth() {
+    actionBtn.addEventListener('click', () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      const realName = document.getElementById('realName').value;
-      const businessName = document.getElementById('businessName').value;
-
       if (isSignup) {
-        console.log("Signing up:", { email, password, realName, businessName });
-        // Add Firebase signup logic here
+        const realName = realNameEl.value;
+        const businessName = businessNameEl.value;
+        createUserWithEmailAndPassword(auth, email, password)
+          .then(userCred => {
+            const uid = userCred.user.uid;
+            // Initialize user data in Realtime Database
+            const updates = {};
+            updates['users/' + uid] = { realName, businessName, email };
+            updates['wallets/' + uid] = { balance: 0 };
+            updates['transactions/' + uid] = {};
+            return update(ref(db), updates);
+          })
+          .then(() => sendEmailVerification(auth.currentUser))
+          .then(() => {
+            authContainer.style.display = 'none';
+            verifyContainer.style.display = 'flex';
+          })
+          .catch(err => alert(err.message));
       } else {
-        console.log("Logging in:", { email, password });
-        // Add Firebase login logic here
+        signInWithEmailAndPassword(auth, email, password)
+          .catch(err => alert(err.message));
       }
-    }
+    });
+
+    resendBtn.addEventListener('click', () => {
+      sendEmailVerification(auth.currentUser)
+        .then(() => alert('Verification email resent.'))
+        .catch(err => alert(err.message));
+    });
+
+    checkBtn.addEventListener('click', () => {
+      reload(auth.currentUser).then(() => {
+        if (auth.currentUser.emailVerified) {
+          window.location.href = 'profile_setup.html';
+        } else {
+          alert('Email not verified yet.');
+        }
+      });
+    });
+
+    onAuthStateChanged(auth, user => {
+      if (user && user.emailVerified && !isSignup) {
+        window.location.href = 'feed.html';
+      }
+    });
   </script>
 </body>
 </html>
