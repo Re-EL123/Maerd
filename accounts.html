@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maerd | Discover Accounts</title>
+  <style>
+    :root {
+      --primary: #000;
+      --background: #fff;
+      --glass: rgba(255,255,255,0.05);
+      --accent: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system, BlinkMacSystemFont,'Segoe UI',sans-serif; }
+    body { background:var(--primary); color:var(--background); display:flex; flex-direction:column; height:100vh; }
+    header {
+      padding:1rem; text-align:center; font-size:1.5rem; font-weight:bold;
+      background:var(--glass); backdrop-filter:blur(10px); border-bottom:1px solid rgba(255,255,255,0.2);
+    }
+    .search-bar {
+      padding:0.5rem 1rem; background:var(--glass); backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,0.2);
+    }
+    .search-bar input {
+      width:100%; padding:0.75rem 1rem; border:none; border-radius:2rem;
+      background:#111; color:white;
+    }
+    .list {
+      flex:1; overflow-y:auto; padding:1rem; display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem;
+    }
+    .card {
+      background:var(--glass); backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,0.1); border-radius:1rem;
+      padding:1rem; display:flex; flex-direction:column; align-items:center;
+      transition:background 0.3s; cursor:pointer;
+    }
+    .card:hover { background:rgba(255,255,255,0.15); }
+    .avatar { width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:0.5rem; }
+    .name { font-size:1.1rem; font-weight:bold; margin-bottom:0.25rem; text-align:center; }
+    .meta { font-size:0.85rem; color:#ccc; text-align:center; margin-bottom:0.75rem; }
+    .buttons { display:flex; gap:0.5rem; }
+    .btn {
+      flex:1; padding:0.5rem; border:none; border-radius:1rem;
+      background:white; color:black; font-weight:bold; cursor:pointer;
+      transition:background 0.3s;
+    }
+    .btn:hover { background:#eee; }
+  </style>
+</head>
+<body>
+
+  <header>Discover Businesses</header>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search by business name…" oninput="renderList()"/>
+  </div>
+
+  <div class="list" id="accountList"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWUXQs1W0IBT2J27eEllfT8jPtZD6Fx20",
+      authDomain: "re-el-eed0d.firebaseapp.com",
+      databaseURL: "https://re-el-eed0d-default-rtdb.firebaseio.com",
+      projectId: "re-el-eed0d",
+      storageBucket: "re-el-eed0d.appspot.com",
+      messagingSenderId: "676690470943",
+      appId: "1:676690470943:web:c18bc16fbf23445c9ecd2a",
+      measurementId: "G-BXJEJLTTD1"
+    };
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getDatabase(app);
+
+    let currentUser = null;
+    let allAccounts = [];
+
+    onAuthStateChanged(auth, user => {
+      if (!user) return location.href = 'index.html';
+      currentUser = user.uid;
+      loadAccounts();
+    });
+
+    async function loadAccounts() {
+      const snap = await get(ref(db, 'users'));
+      const data = snap.val() || {};
+      allAccounts = Object.entries(data)
+        .filter(([id]) => id !== currentUser)
+        .map(([id, u]) => ({ id, ...u }));
+      // initial sort: match serviceAreas & industry with current user
+      const meSnap = await get(ref(db, `users/${currentUser}`));
+      const me = meSnap.val() || {};
+      allAccounts.forEach(acc => {
+        const areaMatch = (acc.serviceAreas||[]).filter(a => (me.serviceAreas||[]).includes(a)).length;
+        const indMatch  = (acc.industry||[]).filter(i => (me.industry||[]).includes(i)).length;
+        acc.score = areaMatch*2 + indMatch;
+      });
+      allAccounts.sort((a,b) => b.score - a.score);
+      renderList();
+    }
+
+    function renderList() {
+      const container = document.getElementById('accountList');
+      const term = document.getElementById('searchInput').value.toLowerCase();
+      container.innerHTML = '';
+      const list = allAccounts.filter(acc =>
+        acc.businessName.toLowerCase().includes(term)
+      );
+      if (!list.length) {
+        container.innerHTML = '<p style="color:#ccc;text-align:center;width:100%;">No businesses found.</p>';
+        return;
+      }
+      list.forEach(acc => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${acc.avatar||'assets/avatars/default.png'}" class="avatar" alt="${acc.businessName}">
+          <div class="name">${acc.businessName}</div>
+          <div class="meta">${(acc.industry||[]).join(', ')}</div>
+          <div class="buttons">
+            <button class="btn" onclick="follow('${acc.id}', this)">Follow</button>
+            <button class="btn" onclick="startChat('${acc.id}', '${acc.businessName}')">Chat</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function follow(id, btn) {
+      const path = `follows/${id}/${currentUser}`;
+      get(ref(db, path)).then(snap => {
+        const updates = {};
+        if (snap.exists()) updates[path] = null;
+        else updates[path] = true;
+        db.ref().update(updates).then(() => {
+          btn.textContent = snap.exists() ? 'Follow' : 'Unfollow';
+        });
+      });
+    }
+
+    function startChat(id, name) {
+      // initialize chat record in Firebase if needed...
+      // then navigate to chat.html#id
+      location.href = `chats.html?chat=${id}`;
+    }
+  </script>
+</body>
+</html>
